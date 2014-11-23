@@ -1,0 +1,24 @@
+{
+  "name": "xFlux",
+  "version": "0.1.0",
+  "description": "The simplest flux implementation",
+  "main": "xFlux.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/arqex/xFlux.git"
+  },
+  "keywords": [
+    "flux",
+    "react",
+    "fluxjs",
+    "reactjs"
+  ],
+  "author": "Javi Marquez",
+  "license": "GNU-2",
+  "bugs": {
+    "url": "https://github.com/arqex/xFlux/issues"
+  }
+}
