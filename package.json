@@ -1,5 +1,5 @@
 {
-  "name": "xFlux",
+  "name": "xflux",
   "version": "0.1.0",
   "description": "The simplest flux implementation",
   "main": "xFlux.js",
