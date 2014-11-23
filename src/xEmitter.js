@@ -1,22 +1,14 @@
 'use strict';
 
-// Object extend, Nod to underscore.js
-var _extend = function( obj ){
-	var source, prop;
-
-	for (var i = 0; i < arguments.length; i++) {
-		source = arguments[i];
-		for( prop in source )
-			obj[prop] = source[prop];
-	}
-
-	return obj;
-};
+var xUtils = require( './xUtils' );
 
 var XEmitter = function(){
 	Object.defineProperty( this, '_events', {
 		value: {}
 	});
+
+	if( typeof this.initialize == 'function' )
+		this.initialize.apply( this, arguments );
 };
 
 XEmitter.prototype = {
@@ -57,11 +49,21 @@ XEmitter.prototype = {
 	trigger: function( eventName ){
 		var args = [].slice.call( arguments, 1 ),
 			listeners = this._events[ eventName ] || [],
-			i
+			onceListeners = [],
+			i, listener
 		;
 
+		// Call listeners
 		for (i = 0; i < listeners.length; i++) {
-			listeners[i].apply( null, args );
+			listener = listeners[i];
+			listener.callback.apply( null, args );
+			if( listener.once )
+				onceListeners.push( i );
+		}
+
+		// Remove listeners marked as once
+		for( i = onceListeners.length - 1; i >= 0; i-- ){
+			listeners.splice( onceListeners[i], 1 );
 		}
 
 		return this;
@@ -70,7 +72,7 @@ XEmitter.prototype = {
 
 // EventEmitter methods
 var proto = XEmitter.prototype;
-_extend( proto, {
+xUtils._extend( proto, {
 	addListener: proto.on,
 	removeListener: proto.off,
 	removeAllListeners: proto.off,
@@ -80,24 +82,26 @@ _extend( proto, {
 // Extend method for 'inheritance', nod to backbone.js
 Object.defineProperty( XEmitter, '_extend', {
 	value: function( protoProps ){
-		var child;
+		var parent = this,
+			child
+		;
 
-		if ( protoProps && protoProps.constructor ) {
+		if ( protoProps && protoProps.hasOwnProperty( constructor ) ) {
 			child = protoProps.constructor;
 		} else {
-			child = function(){ return this.apply(this, arguments); };
+			child = function(){ return parent.apply(this, arguments); };
 		}
 
-		_extend( child, this );
+		xUtils._extend( child, parent );
 
 		var Surrogate = function(){ this.constructor = child; };
-		Surrogate.prototype = this.prototype;
+		Surrogate.prototype = parent.prototype;
 		child.prototype = new Surrogate();
 
 		if ( protoProps )
-			_extend( child.prototype, protoProps );
+			xUtils._extend( child.prototype, protoProps );
 
-		child.__super__ = this.prototype;
+		child.__super__ = parent.prototype;
 
 		return child;
 	}

@@ -1,9 +1,11 @@
 'use strict';
 
-var XEmitter = require('./xEmitter');
+var XEmitter = require('./xEmitter'),
+	xUtils = require('./xUtils')
+;
 
 var Store = XEmitter._extend({
-	constructor: function( props ){
+	initialize: function( props ){
 		this.props = props;
 	},
 
@@ -40,12 +42,19 @@ var Store = XEmitter._extend({
 });
 
 var XStore = XEmitter._extend({
-	constructor: function( options ){
+	initialize: function( options ){
 		var me = this,
 			opts = options || {},
 			store = new Store( opts.initialState ),
 			actionType, stateProp
 		;
+
+		// Store id
+		if( options.id ) {
+			Object.defineProperty( this, '_id', {
+				value: options.id
+			});
+		}
 
 		// Register action callbacks in the store
 		Object.defineProperties( this, {
@@ -64,10 +73,14 @@ var XStore = XEmitter._extend({
 
 			// Callback for register in the dispatcher
 			callback: {
-				value: (function( payload ){
-					if( this._callbacks[ payload.actionType ] ){
-						// The callbacks are already bound to this xStore
-						return this._callbacks[ payload.actionType ].call( this, payload );
+				value: (function(){
+					var actionType = arguments[ 0 ],
+						args = [].slice.call( arguments, 1 )
+					;
+
+					if( this._callbacks[ actionType ] ){
+						// The callbacks are already bound to this xStore and the mutable store
+						return this._callbacks[ actionType ].apply( this, args );
 					}
 
 					return true;
@@ -82,7 +95,6 @@ var XStore = XEmitter._extend({
 			Object.defineProperty( me, propName, {
 				enumerable: true,
 				configurable: false,
-				value: value,
 				get: function(){
 					return store.get( propName );
 				}
@@ -115,10 +127,15 @@ var XStore = XEmitter._extend({
 		});
 	},
 
+	getState: function() {
+		// Clone the store properties
+		return xUtils._extend({}, this);
+	},
+
 	waitFor: function( ids ) {
 		// The xDispatcher adds itself as a property
 		// when the xStore is registered
-		this.dispatcher.waitFor( ids );
+		return this.dispatcher.waitFor( ids );
 	}
 });
 

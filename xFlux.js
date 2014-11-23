@@ -9,6 +9,8 @@ var xFlux = function(){
 		value: new XDispatcher()
 	});
 
+	this.stores = {};
+
 	if( typeof Promise != 'undefined' ){
 		this.promisify( Promise );
 	}
@@ -16,18 +18,21 @@ var xFlux = function(){
 
 xFlux.prototype = {
 	createStore: function( options ){
-		return new XStore( options );
+		var store = new XStore( options );
+
+		// If the store has an id, register it in xFlux and in the dispatcher
+		if( store._id ){
+			this.stores[ store._id ] = store;
+			this.dispatcher.registerStore( store._id, store );
+		}
+
+		return store;
 	},
 
-	action: function( name, payload ){
-		Object.defineProperty( payload, 'actionType', {
-			value: name,
-			writable: true,
-			configurable: true
-		});
-
-		return this.dispatcher.dispatch( payload );
+	doAction: function() {
+		return this.dispatcher.dispatch( arguments );
 	},
+
 	promisify: function( Promise ){
 		this._Promise = Promise;
 		this.dispatcher._Promise = Promise;

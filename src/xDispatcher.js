@@ -45,7 +45,7 @@ XDispatcher.prototype = {
 		return this._Promise.all( promises );
 	},
 
-	dispatch: function( payload ) {
+	dispatch: function() {
 		var me = this,
 			promises = [],
 			id, promise
@@ -57,7 +57,7 @@ XDispatcher.prototype = {
 		this._promises = {};
 
 		for( id in this._callbacks ){
-			this._promises[ id ] = this._callbacks[id](payload);
+			this._promises[ id ] = this._callbacks[id].apply( this, arguments );
 			promises.push( this._promises[ id ] );
 		}
 
@@ -72,8 +72,8 @@ XDispatcher.prototype = {
 			)
 		;
 
-		promise.dispatch = function( payload ){
-			this.then( me.dispatch.bind( me, payload ) );
+		promise.dispatch = function() {
+			this.then( me.dispatch.apply( me, arguments ) );
 		};
 
 		return promise;
