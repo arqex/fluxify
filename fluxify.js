@@ -4,7 +4,7 @@ var XDispatcher = require( './src/xDispatcher' ),
 	XStore = require( './src/xStore' )
 ;
 
-var xFlux = function(){
+var Fluxify = function(){
 	Object.defineProperty( this, 'dispatcher', {
 		value: new XDispatcher()
 	});
@@ -16,11 +16,11 @@ var xFlux = function(){
 	}
 };
 
-xFlux.prototype = {
+Fluxify.prototype = {
 	createStore: function( options ){
 		var store = new XStore( options );
 
-		// If the store has an id, register it in xFlux and in the dispatcher
+		// If the store has an id, register it in Fluxify and in the dispatcher
 		if( store._id ){
 			this.stores[ store._id ] = store;
 			this.dispatcher.registerStore( store._id, store );
@@ -39,4 +39,4 @@ xFlux.prototype = {
 	}
 };
 
-module.exports = new xFlux();
+module.exports = new Fluxify();
