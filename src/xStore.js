@@ -135,7 +135,7 @@ var XStore = XEmitter._extend({
 	waitFor: function( ids ) {
 		// The xDispatcher adds itself as a property
 		// when the xStore is registered
-		return this.dispatcher.waitFor( ids );
+		return this._dispatcher.waitFor( ids );
 	}
 });
 

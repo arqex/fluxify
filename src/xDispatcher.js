@@ -22,7 +22,9 @@ XDispatcher.prototype = {
 
 	registerStore: function( id, xStore ){
 		this._callbacks[id] = xStore.callback;
-		xStore.dispatcher = this;
+		Object.defineProperty(xStore, '_dispatcher', {
+			value: this
+		});
 	},
 
 	unregister: function( id ) {
@@ -72,7 +74,7 @@ XDispatcher.prototype = {
 			)
 		;
 
-		promise.dispatch = function() {
+		promise.dispatch = promise.doAction = function() {
 			this.then( me.dispatch.apply( me, arguments ) );
 		};
 

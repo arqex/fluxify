@@ -30,7 +30,7 @@ xFlux.prototype = {
 	},
 
 	doAction: function() {
-		return this.dispatcher.dispatch( arguments );
+		return this.dispatcher.dispatch.apply( this.dispatcher, arguments );
 	},
 
 	promisify: function( Promise ){
