@@ -1,14 +1,14 @@
 {
-  "name": "xflux",
+  "name": "fluxify",
   "version": "0.1.0",
   "description": "The simplest flux implementation",
-  "main": "xFlux.js",
+  "main": "fluxify.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/arqex/xFlux.git"
+    "url": "https://github.com/arqex/fluxify.git"
   },
   "keywords": [
     "flux",
@@ -19,6 +19,6 @@
   "author": "Javi Marquez",
   "license": "GNU-2",
   "bugs": {
-    "url": "https://github.com/arqex/xFlux/issues"
+    "url": "https://github.com/arqex/fluxify/issues"
   }
 }
