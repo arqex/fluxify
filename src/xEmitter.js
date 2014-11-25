@@ -11,7 +11,9 @@ var XEmitter = function(){
 		this.initialize.apply( this, arguments );
 };
 
-XEmitter.prototype = {
+// The prototype methods are stored in a different object
+// and applied as non enumerable properties later
+var emitterPrototype = {
 	on: function( eventName, listener, once ){
 		var listeners = this._events[ eventName ] || [];
 
@@ -71,13 +73,22 @@ XEmitter.prototype = {
 };
 
 // EventEmitter methods
-var proto = XEmitter.prototype;
-xUtils._extend( proto, {
-	addListener: proto.on,
-	removeListener: proto.off,
-	removeAllListeners: proto.off,
-	emit: proto.trigger
+xUtils._extend( emitterPrototype, {
+	addListener: emitterPrototype.on,
+	removeListener: emitterPrototype.off,
+	removeAllListeners: emitterPrototype.off,
+	emit: emitterPrototype.trigger
 });
+
+// Methods are not enumerable so, when the stores are
+// extended with the emitter, they can be iterated as
+// hashmaps
+XEmitter.prototype = {};
+for (var method in emitterPrototype ) {
+	Object.defineProperty(XEmitter.prototype, method, {
+		value: emitterPrototype[ method ]
+	});
+}
 
 // Extend method for 'inheritance', nod to backbone.js
 Object.defineProperty( XEmitter, '_extend', {
@@ -94,12 +105,26 @@ Object.defineProperty( XEmitter, '_extend', {
 
 		xUtils._extend( child, parent );
 
-		var Surrogate = function(){ this.constructor = child; };
+		var Surrogate = function(){
+			// Again the constructor is also defined as not enumerable
+			Object.defineProperty( this, 'constructor', {
+				value: child
+			});
+		};
 		Surrogate.prototype = parent.prototype;
 		child.prototype = new Surrogate();
 
-		if ( protoProps )
-			xUtils._extend( child.prototype, protoProps );
+		// All the extending methods need to be also
+		// non enumerable properties
+		if ( protoProps ) {
+			for( var p in protoProps ){
+				if( p != 'constructor' ) {
+					Object.defineProperty( child.prototype, p, {
+						value: protoProps[p]
+					});
+				}
+			}
+		}
 
 		child.__super__ = parent.prototype;
 

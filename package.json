@@ -4,7 +4,7 @@
   "description": "The simplest flux implementation",
   "main": "fluxify.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node_modules/mocha/bin/mocha tests"
   },
   "repository": {
     "type": "git",
@@ -20,5 +20,10 @@
   "license": "GNU-2",
   "bugs": {
     "url": "https://github.com/arqex/fluxify/issues"
+  },
+  "devDependencies": {
+    "mocha": "~2.0.1",
+    "unit.js": "~1.0.2",
+    "es6-promise": "~2.0.0"
   }
 }

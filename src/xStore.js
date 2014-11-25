@@ -128,8 +128,12 @@ var XStore = XEmitter._extend({
 	},
 
 	getState: function() {
+		var props = {};
+		for( var prop in this )
+			props[ prop ] = this[ prop ];
+
 		// Clone the store properties
-		return xUtils._extend({}, this);
+		return xUtils._extend({}, props);
 	},
 
 	waitFor: function( ids ) {
