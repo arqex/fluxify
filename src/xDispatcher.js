@@ -3,7 +3,10 @@
 var XDispatcher = function(){
 	this._callbacks = {};
 	this._isDispatching = false;
-	this._ID = 1;
+
+	if( typeof Promise != 'undefined' ){
+		this._Promise = Promise;
+	}
 };
 
 XDispatcher.prototype = {
@@ -12,7 +15,7 @@ XDispatcher.prototype = {
 
 		// If the callback is the first parameter
 		if( typeof id == 'function' ){
-			ID = 'ID_' + (this._ID++);
+			ID = 'ID_' + ( Object.keys( this._callbacks ).length + 1 );
 			callback = id;
 		}
 
@@ -36,10 +39,15 @@ XDispatcher.prototype = {
 			i = 0
 		;
 
+		if( !Array.isArray( ids ) )
+			ids = [ ids ];
+
 		for(; i<ids.length; i++ ){
 			if( this._promises[ ids[i] ] )
 				promises.push( this._promises[ ids[i] ] );
 		}
+
+		//console.log( this._promises );
 
 		if( !promises.length )
 			return this._Promise.resolve();
@@ -50,18 +58,26 @@ XDispatcher.prototype = {
 	dispatch: function() {
 		var me = this,
 			promises = [],
+			dispatchArguments = arguments,
 			id, promise
 		;
 
 		if( this._isDispatching )
 			throw( 'Cannot dispatch in the middle of a dispatch.' );
 
-		this._promises = {};
+		this._promises = [];
 
-		for( id in this._callbacks ){
-			this._promises[ id ] = this._callbacks[id].apply( this, arguments );
-			promises.push( this._promises[ id ] );
-		}
+		// A closure is needed for the callback id
+		Object.keys( this._callbacks ).forEach( function( id ){
+
+			// All the promises must be set in me._promises before trying to resolved
+			// in order to make waitFor work ok
+			me._promises[ id ] = me._Promise.resolve().then( function(){
+				return me._callbacks[ id ].apply( me, dispatchArguments );
+			});
+
+			promises.push( me._promises[ id ] );
+		});
 
 		var promise = this._Promise.all( promises )
 			.then(
@@ -75,7 +91,7 @@ XDispatcher.prototype = {
 		;
 
 		promise.dispatch = promise.doAction = function() {
-			this.then( me.dispatch.apply( me, arguments ) );
+			return me.dispatch.apply( me, arguments );
 		};
 
 		return promise;
