@@ -141,5 +141,21 @@ describe("Store tests", function(){
 		;
 	});
 
+	it( "Adding an actionCallback after registering", function(){
+		store.addActionCallbacks({
+			lastCallback: function( s ){
+				s.set({
+					added: true
+				});
+			}
+		});
+
+		return flux.doAction( 'lastCallback')
+			.then(function(){
+				assert( store.added );
+			})
+		;
+	});
+
 
 });

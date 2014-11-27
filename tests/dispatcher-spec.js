@@ -16,6 +16,8 @@ var state = {
 	actionCallbacks = {
 		changeA: function( store ) {
 			store.set( 'a', 'A' );
+		},
+		wait: function( store ){
 		}
 	},
 	store
@@ -196,6 +198,7 @@ describe("Dispatcher tests", function(){
 		unregisterAll();
 		d.register( f );
 
+		assert.equal( d.isDispatching(), false );
 
 		assert( !d.isDispatching() );
 		return d.dispatch( "first" )
@@ -208,29 +211,46 @@ describe("Dispatcher tests", function(){
 		;
 	});
 
-	it( "Cannot dispatch in the middle of a dispatch", function( done ){
-		var f = function(){
-			d.dispatch("Second");
-		};
+	it( "Dispatches are enqueued when another dispatch is on", function( done ){
+		var waited = [],
+			wait = function( action ){
+				if( action == 'wait' ){
+					return new d._Promise( function( resolve ){
+						setTimeout( function(){
+							waited.push(1);
+							resolve();
+						}, 500);
+					});
+				}
+			},
+			rewait = function( action ){
+				if( action == 'checkWait' ){
+					return new d._Promise( function( resolve ){
+						setTimeout( function(){
+							waited.push(2);
+							resolve();
+						}, 500);
+					});
+				}
+			},
+			f = function( action ){
+				if( action == 'reCheckWait' ) {
+					assert.deepEqual(waited, [1, 2]);
+				}
+			}
+		;
 
 		unregisterAll();
 		d.register( f );
+		d.register( rewait );
+		d.register( wait );
 
-		d.dispatch( "first" )
+		d.dispatch("wait");
+		d.dispatch('checkWait');
+		d.dispatch('reCheckWait')
 			.then( function(){
-				done();
-			})
-			.catch( function( err ) {
-				try {
-					assert.equal( err.message, 'Cannot dispatch in the middle of a dispatch.' );
-				}
-				catch ( e ) {
-					console.log( e );
-				}
 				done();
 			})
 		;
 	});
-
-
 });

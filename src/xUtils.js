@@ -19,4 +19,4 @@ var xUtils = {
 
 //#build
 
-module.exports = xUtils
+module.exports = xUtils;

@@ -1,7 +1,8 @@
 {
   "name": "fluxify",
-  "version": "0.1.0",
+  "version": "0.2.1",
   "description": "The simplest flux implementation",
+  "homepage": "https://github.com/arqex/fluxify",
   "main": "fluxify.js",
   "scripts": {
     "test": "node_modules/mocha/bin/mocha tests"
@@ -16,7 +17,7 @@
     "fluxjs",
     "reactjs"
   ],
-  "author": "Javi Marquez",
+  "author": "Javi Marquez (http://arqex.com)",
   "license": "GNU-2",
   "bugs": {
     "url": "https://github.com/arqex/fluxify/issues"
@@ -24,6 +25,9 @@
   "devDependencies": {
     "mocha": "~2.0.1",
     "unit.js": "~1.0.2",
-    "es6-promise": "~2.0.0"
+    "es6-promise": "~2.0.0",
+    "gulp-uglify": "~1.0.1",
+    "gulp-rename": "~1.2.0",
+    "gulp-insert": "~0.4.0"
   }
 }
