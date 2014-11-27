@@ -4,6 +4,8 @@ var XDispatcher = require( './src/xDispatcher' ),
 	XStore = require( './src/xStore' )
 ;
 
+//#build
+
 var Fluxify = function(){
 	Object.defineProperty( this, 'dispatcher', {
 		value: new XDispatcher()
@@ -38,5 +40,7 @@ Fluxify.prototype = {
 		this.dispatcher._Promise = Promise;
 	}
 };
+
+//#build
 
 module.exports = new Fluxify();

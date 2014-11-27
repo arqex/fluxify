@@ -23,6 +23,13 @@ var state = {
 
 
 describe("Fluxify tests", function(){
+
+	// Clean the dispatcher after the tests
+	after( function(){
+		for ( var id in flux.dispatcher._callbacks )
+			flux.dispatcher.unregister( id );
+	});
+
 	it( "Should have the dispatcher as property", function(){
 
 		assert.equal( flux.dispatcher instanceof Dispatcher, true );
@@ -45,6 +52,9 @@ describe("Fluxify tests", function(){
 		var error = false;
 
 		flux.promisify( Promise );
+
+
+		console.log( 'Is dispatching: ' + flux.dispatcher.isDispatching() );
 
 		try {
 			flux.doAction('whatever');
@@ -96,4 +106,6 @@ describe("Fluxify tests", function(){
 			})
 		;
 	});
+
+
 });

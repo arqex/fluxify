@@ -4,9 +4,16 @@ var XEmitter = require('./xEmitter'),
 	xUtils = require('./xUtils')
 ;
 
+//#build
+
 var Store = XEmitter._extend({
 	initialize: function( props ){
-		this.props = props;
+		if( ! props )
+			return this.props = {};
+
+		this.props = {};
+		for( var p in props )
+			this.props[ p ] = props[ p ];
 	},
 
 	get: function( prop ){
@@ -142,5 +149,7 @@ var XStore = XEmitter._extend({
 		return this._dispatcher.waitFor( ids );
 	}
 });
+
+//#build
 
 module.exports = XStore;

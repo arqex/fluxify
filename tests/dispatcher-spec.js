@@ -170,7 +170,7 @@ describe("Dispatcher tests", function(){
 			})
 		;
 	});
-
+	/* // Chain dispatch not ready
 	it( "Test chained dispatches", function(){
 		wait = false;
 		result = [];
@@ -187,7 +187,7 @@ describe("Dispatcher tests", function(){
 			})
 		;
 	});
-
+	*/
 	it( "isDispatching should return true in the middle of a dispatch", function(){
 		var f = function(){
 			assert( d.isDispatching() );
@@ -216,15 +216,21 @@ describe("Dispatcher tests", function(){
 		unregisterAll();
 		d.register( f );
 
-		return d.dispatch( "first" )
+		d.dispatch( "first" )
 			.then( function(){
-				assert.fail( 1,1, "It should fail!!");
 				done();
 			})
 			.catch( function( err ) {
-				assert( 'ok', 'Error thrown' );
+				try {
+					assert.equal( err.message, 'Cannot dispatch in the middle of a dispatch.' );
+				}
+				catch ( e ) {
+					console.log( e );
+				}
 				done();
 			})
 		;
 	});
+
+
 });

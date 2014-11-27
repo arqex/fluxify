@@ -2,6 +2,8 @@
 
 var xUtils = require( './xUtils' );
 
+//#build
+
 var XEmitter = function(){
 	Object.defineProperty( this, '_events', {
 		value: {}
@@ -131,5 +133,7 @@ Object.defineProperty( XEmitter, '_extend', {
 		return child;
 	}
 });
+
+//#build
 
 module.exports = XEmitter;

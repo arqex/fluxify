@@ -1,5 +1,7 @@
 'use strict';
 
+//#build
+
 var XDispatcher = function(){
 	this._callbacks = {};
 	this._isDispatching = false;
@@ -62,10 +64,13 @@ XDispatcher.prototype = {
 			id, promise
 		;
 
-		if( this._isDispatching )
-			throw( 'Cannot dispatch in the middle of a dispatch.' );
+		if( ! this._Promise )
+			throw( new TypeError( 'No promises.' ));
 
-		this._promises = [];
+		if( this._isDispatching )
+			throw( new Error( 'Cannot dispatch in the middle of a dispatch.' ));
+
+		this._promises = [ this._isDispatching = true ];
 
 		// A closure is needed for the callback id
 		Object.keys( this._callbacks ).forEach( function( id ){
@@ -89,10 +94,21 @@ XDispatcher.prototype = {
 				}
 			)
 		;
+		/* // Chain dispatch calls, not ready
+		promise.dispatch = promise.doAction = (function( p ) {
 
-		promise.dispatch = promise.doAction = function() {
-			return me.dispatch.apply( me, arguments );
-		};
+			console.log( p );
+
+			var dispatchArgs = [].slice.call( arguments, 1 ),
+				dPromise = p.then(function(){
+					return me.dispatch.apply( me, dispatchArgs );
+				})
+			;
+
+			dPromise.dispatch = dPromise.doAction = p.dispatch;
+			return dPromise;
+		}).bind( promise );
+		*/
 
 		return promise;
 	},
@@ -102,5 +118,7 @@ XDispatcher.prototype = {
 	}
 
 };
+
+//#build
 
 module.exports = XDispatcher;
