@@ -9,7 +9,7 @@
 	} else if (typeof exports === 'object') {
 		module.exports = factory();
 	} else {
-		root.Foo = factory();
+		root.fluxify = factory();
 	}
 }(this, function() {
 	'use strict';
