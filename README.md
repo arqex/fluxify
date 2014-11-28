@@ -310,7 +310,7 @@ React.render(<Hello name={nameStore.name} />, document.body);
 ```
 [See this example working](http://jsfiddle.net/marquex/kb3gN/8204/)
 
-### Stores initialize options
+### Store initialize options
 The code above is a complete example of stores in Fluxify. Stores are created using Fluxify's factory method ```createStore``` with an options object. Available options are:
 
 * **id** {string}: When an id is set in the options object, store's callback is automatically registered in the dispatcher with that id.
@@ -362,7 +362,7 @@ flux.doAction( {actionType: 'myAction'} );
 ### Store updater and events
 The callback will receive always a writable ```updater``` object as the first argument. Using that object is the only way of updating a store, and it is only available in action callbacks forcing the developer to update the stores only there, as the Flux architecture recommends.
 To update the store, use the ```updater.set``` method, it will change store's property values and emit events that can be listener by the rest of the application.
-The rest of the arguments received are the one given to ```doAction```.
+The rest of the arguments received are the ones given to ```doAction```.
 In every update, two events are emitted by the store:
 
 1. ```change:{updatedProperty}``` with the new and old values as parameters for the listeners.
@@ -423,7 +423,8 @@ var myStore = flux.createStore({
 myStore.a = 5;
 console.log( myStore.a ); // logs 1
 
-// But you can addThis won't emit any event
+// But you can add new ones
+// This won't emit any event
 myStore.b = 1;
 console.log( myStore.b ); // logs 1
 
