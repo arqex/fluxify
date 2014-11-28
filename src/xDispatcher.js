@@ -13,6 +13,7 @@ var XDispatcher = function(){
 	this._callbacks = {};
 	this._dispatchQueue = [];
 	this._currentDispatch = false;
+	this._ID =  1;
 
 	if( typeof Promise != 'undefined' ){
 		this._Promise = Promise;
@@ -35,11 +36,13 @@ XDispatcher.prototype = {
 
 		// If the callback is the first parameter
 		if( typeof id == 'function' ){
-			ID = 'ID_' + ( Object.keys( this._callbacks ).length + 1 );
+			ID = 'ID_' + this._ID;
 			callback = id;
 		}
 
 		this._callbacks[ID] = callback;
+		this._ID++;
+
 		return ID;
 	},
 
@@ -52,12 +55,12 @@ XDispatcher.prototype = {
 	 * @return {String}        The id of the callback to be used with the waitFor method.
 	 */
 	registerStore: function( id, xStore ){
-		this._callbacks[id] = xStore.callback;
+
 		Object.defineProperty(xStore, '_dispatcher', {
 			value: this
 		});
 
-		return id;
+		return this.register( id, xStore.callback );
 	},
 
 	/**

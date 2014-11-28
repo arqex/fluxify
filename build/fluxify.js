@@ -1,4 +1,4 @@
-/* fluxify v0.2.1 (27-11-2014)
+/* fluxify v0.2.1 (28-11-2014)
  * https://github.com/arqex/fluxify
  * By Javi Marquez (http://arqex.com)
  * License: GNU-2
@@ -293,12 +293,8 @@ var XStore = XEmitter._extend({
 	},
 
 	getState: function() {
-		var props = {};
-		for( var prop in this )
-			props[ prop ] = this[ prop ];
-
 		// Clone the store properties
-		return xUtils._extend({}, props);
+		return xUtils._extend({}, this);
 	},
 
 	waitFor: function( ids ) {
@@ -321,6 +317,7 @@ var XDispatcher = function(){
 	this._callbacks = {};
 	this._dispatchQueue = [];
 	this._currentDispatch = false;
+	this._ID =  1;
 
 	if( typeof Promise != 'undefined' ){
 		this._Promise = Promise;
@@ -343,11 +340,13 @@ XDispatcher.prototype = {
 
 		// If the callback is the first parameter
 		if( typeof id == 'function' ){
-			ID = 'ID_' + ( Object.keys( this._callbacks ).length + 1 );
+			ID = 'ID_' + this._ID;
 			callback = id;
 		}
 
 		this._callbacks[ID] = callback;
+		this._ID++;
+
 		return ID;
 	},
 
@@ -360,12 +359,12 @@ XDispatcher.prototype = {
 	 * @return {String}        The id of the callback to be used with the waitFor method.
 	 */
 	registerStore: function( id, xStore ){
-		this._callbacks[id] = xStore.callback;
+
 		Object.defineProperty(xStore, '_dispatcher', {
 			value: this
 		});
 
-		return id;
+		return this.register( id, xStore.callback );
 	},
 
 	/**
