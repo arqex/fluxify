@@ -209,7 +209,7 @@ Fluxify's stores makes use of the multiple arguments dispatching to make easier 
 
 
 ## Actions
-Actions are originated by the user interaction with the application or by some server event. The dispatcher broadcast the action and its data to the registered callbacks and they know how to react to that actions updating the stores.
+Actions are originated by the user interaction with the application or by some server event. The dispatcher broadcasts the action and its data to the registered callbacks and they know how to react to that actions updating the stores.
 
 In Fluxify there are no action objects, but the concept of Action is important in Flux architecture, so the fluxify object expose a ```doAction``` method to explicity remark that we are executing an action.
 
@@ -255,7 +255,7 @@ flux.doAction( 'sayHello', 'John' ); // logs "Hello John!"
 ```
 The example above is shorter and easier to write and understand than the original one, and it is as semantic as the one that uses action creators.
 
-In fluxify, the use of *multiple-argument dispatches* is preferred to the use of verbose payloads, and Store's action callbacks expect the first argument of a dispatch to be the action name.
+In fluxify, the use of *multiple-argument dispatches* is preferred to the use of verbose payloads.
 
 ## Stores
 The stores are the source of truth of your application. They keep the state of parts of your application, and your UI should be the graphical representation of those states. If something change in a store, the UI should react updating the related parts to reflect that state change.
@@ -267,6 +267,7 @@ var flux = require('fluxify'),
 	React = require('react')
 ;
 
+// Our store
 var nameStore = flux.createStore({
 	id: 'nameStore',
 	initialState: {
@@ -309,6 +310,7 @@ React.render(<Hello name={nameStore.name} />, document.body);
 ```
 [See this example working](http://jsfiddle.net/marquex/kb3gN/8204/)
 
+### Stores initialize options
 The code above is a complete example of stores in Fluxify. Stores are created using Fluxify's factory method ```createStore``` with an options object. Available options are:
 
 * **id** {string}: When an id is set in the options object, store's callback is automatically registered in the dispatcher with that id.
@@ -340,8 +342,8 @@ console.log( myStore.c ); // logs 3
 ```
 * **actionCallbacks** {object<Function>}: The functions in this object will be registered in the dispatcher, and called when the action named as the key is triggered.
 There are two ways of call these callbacks:
-1. Passing the name as the first argument of Fluxify's ```doAction``` method.
-2. Passing the name as the ```actionType``` attribute of the payload.
+	1. Passing the name as the first argument of Fluxify's ```doAction``` method.
+	2. Passing the name as the ```actionType``` attribute of the payload.
 ```js
 var myStore = flux.createStore({
 	id: 'myStore',
@@ -356,11 +358,15 @@ var myStore = flux.createStore({
 flux.doAction( 'myAction' );
 flux.doAction( {actionType: 'myAction'} );
 ```
+
+### Store updater and events
 The callback will receive always a writable ```updater``` object as the first argument. Using that object is the only way of updating a store, and it is only available in action callbacks forcing the developer to update the stores only there, as the Flux architecture recommends.
 To update the store, use the ```updater.set``` method, it will change store's property values and emit events that can be listener by the rest of the application.
 The rest of the arguments received are the one given to ```doAction```.
 In every update, two events are emitted by the store:
+
 1. ```change:{updatedProperty}``` with the new and old values as parameters for the listeners.
+
 2. ```change``` with an array of objects ```{prop, value, previousValue}``` for every property updated.
 ```js
 var myStore = flux.createStore({
