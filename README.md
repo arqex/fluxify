@@ -141,7 +141,7 @@ dispatcher.dispatch( {actionType: 'whatever'} )
 // Everything dispatched properly
 ```
 
-Since a dispatch can take a while, it is possible to call a new dispatch before the previous dispatch call had finished. Instead if throwing an error, the new call will be enqueued and executed just after the current dispatch finishes.
+Since a dispatch can take a while, it is possible to call a new dispatch before the previous dispatch call had finished. Instead of throwing an error, the new call will be enqueued and executed just after the current dispatch finishes.
 
 ### Dispatcher promises
 Fluxify needs ES6 Promises to work. If your environment supports promises ( current Chrome, Firefox, Opera and Safari versions support it ) or you use any polyfill everything will be ok.
@@ -205,11 +205,11 @@ dispatcher.dispatch( 'logAll', 1, 2, 3 ); // logs ['logAll', 1, 2, 3]
 
 ```
 
-Fluxify's stores makes use of the multiple arguments dispatching to make easier to register their callbacks.
+Fluxify's stores make use of the multiple arguments dispatching to make easier to register their callbacks.
 
 
 ## Actions
-Actions are originated by the user interaction with the application or by some server event. The dispatcher broadcasts the action and its data to the registered callbacks and they know how to react to that actions updating the stores.
+Actions are originated by the user interaction with the application or by some server event. The dispatcher broadcasts the action and its data to the registered callbacks and they know how to react to those actions updating the stores.
 
 In Fluxify there are no action objects, but the concept of Action is important in Flux architecture, so the fluxify object expose a ```doAction``` method to explicity remark that we are executing an action.
 
@@ -240,7 +240,7 @@ actions.hello('Amy');
 // Much more readable than
 // flux.doAction( {actionType: 'sayHello', name: 'John'} );
 ```
-In other different Flux implementations, those objects that store the actions are called *action creators*. Thinking in the fluxify way they are not needed either, since the dispatches accept multiple the arguments, it is much easier to use the ```doAction``` method directly with the data that the callback needs as arguments.
+In different Flux implementations, the objects that store the actions are called *action creators*. Thinking in the fluxify way they are not needed either, since the dispatches accept multiple the arguments, it is much easier to use the ```doAction``` method directly with the data that the callback needs as arguments.
 
 Let's fluxify:
 ```js
@@ -360,7 +360,7 @@ flux.doAction( {actionType: 'myAction'} );
 ```
 
 ### Store updater and events
-The callback will receive always a writable ```updater``` object as the first argument. Using that object is the only way of updating a store, and it is only available in action callbacks forcing the developer to update the stores only there, as the Flux architecture recommends.
+Callbacks will receive always a ```updater``` object as the first argument. Using that object is the only way of updating a store, and it is only available in action callbacks forcing the developer to update the stores only there, as the Flux architecture recommends.
 To update the store, use the ```updater.set``` method, it will change store's property values and emit events that can be listener by the rest of the application.
 The rest of the arguments received are the ones given to ```doAction```.
 In every update, two events are emitted by the store:
