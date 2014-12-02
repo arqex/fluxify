@@ -217,7 +217,7 @@ In Fluxify there are no action objects, but the concept of Action is important i
 var flux = require('fluxify');
 
 flux.dispatcher.register( function( payload ){
-	if( payload.actionType == 'wakeUp')
+	if( payload.actionType == 'sayHello')
 		console.log( 'Hello ' + payload.name + '!' );
 });
 
