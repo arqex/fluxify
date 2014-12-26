@@ -151,7 +151,7 @@ But if the enviroment doesn't have the global ```Promise``` object defined, it i
 ```js
 // Using Jake Archibald's es6 promise implementation
 var flux = require('fluxify'),
-	Promise = require('es6-promise')
+	Promise = require('es6-promise').Promise
 ;
 
 // Let's get async!
@@ -217,7 +217,7 @@ In Fluxify there are no action objects, but the concept of Action is important i
 var flux = require('fluxify');
 
 flux.dispatcher.register( function( payload ){
-	if( payload.actionType == 'wakeUp')
+	if( payload.actionType == 'sayHello')
 		console.log( 'Hello ' + payload.name + '!' );
 });
 
@@ -247,7 +247,7 @@ Let's fluxify:
 var flux = require('fluxify');
 
 flux.dispatcher.register( function( actionName, name ){
-	if( actionName == 'wakeUp')
+	if( actionName == 'sayHello')
 		console.log( 'Hello ' + name + '!' );
 });
 
