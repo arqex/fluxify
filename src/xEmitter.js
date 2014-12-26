@@ -60,7 +60,14 @@ var emitterPrototype = {
 		// Call listeners
 		for (i = 0; i < listeners.length; i++) {
 			listener = listeners[i];
-			listener.callback.apply( null, args );
+
+			if( listener.callback )
+				listener.callback.apply( null, args );
+			else {
+				// If there is not a callback, remove!
+				listener.once = true;
+			}
+
 			if( listener.once )
 				onceListeners.push( i );
 		}
