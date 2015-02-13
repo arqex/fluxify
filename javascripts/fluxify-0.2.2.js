@@ -470,7 +470,7 @@ XDispatcher.prototype = {
 					return me._callbacks[ id ].apply( me, dispatchArguments );
 				})
 				.catch( function( err ){
-					throw err;
+					console.error( err.stack || err );
 				})
 			;
 
