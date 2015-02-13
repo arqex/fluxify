@@ -152,11 +152,16 @@ XDispatcher.prototype = {
 		// A closure is needed for the callback id
 		Object.keys( this._callbacks ).forEach( function( id ){
 
-			// All the promises must be set in me._promises before trying to resolved
+			// All the promises must be set in me._promises before trying to resolve
 			// in order to make waitFor work ok
-			me._promises[ id ] = me._Promise.resolve().then( function(){
-				return me._callbacks[ id ].apply( me, dispatchArguments );
-			});
+			me._promises[ id ] = me._Promise.resolve()
+				.then( function(){
+					return me._callbacks[ id ].apply( me, dispatchArguments );
+				})
+				.catch( function( err ){
+					console.error( err.stack || err );
+				})
+			;
 
 			promises.push( me._promises[ id ] );
 		});
@@ -171,23 +176,6 @@ XDispatcher.prototype = {
 		return this._Promise.all( promises )
 			.then( dequeue, dequeue )
 		;
-
-
-		/* // Chain dispatch calls, not ready
-		promise.dispatch = promise.doAction = (function( p ) {
-
-			console.log( p );
-
-			var dispatchArgs = [].slice.call( arguments, 1 ),
-				dPromise = p.then(function(){
-					return me.dispatch.apply( me, dispatchArgs );
-				})
-			;
-
-			dPromise.dispatch = dPromise.doAction = p.dispatch;
-			return dPromise;
-		}).bind( promise );
-		*/
 	},
 
 	/**

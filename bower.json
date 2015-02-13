@@ -1,0 +1,25 @@
+{
+  "name": "fluxify",
+  "main": "fluxify.js",
+  "version": "0.2.2",
+  "homepage": "https://github.com/arqex/fluxify",
+  "authors": [
+    "arqex"
+  ],
+  "description": "The simplest flux implementation",
+  "keywords": [
+    "react",
+    "flux",
+    "promises",
+    "asynchronous",
+    "lightweight"
+  ],
+  "license": "GNU-v2",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

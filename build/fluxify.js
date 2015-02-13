@@ -1,4 +1,4 @@
-/* fluxify v0.2.1 (28-11-2014)
+/* fluxify v0.2.2 (13-2-2015)
  * https://github.com/arqex/fluxify
  * By Javi Marquez (http://arqex.com)
  * License: GNU-2
@@ -88,7 +88,14 @@ var emitterPrototype = {
 		// Call listeners
 		for (i = 0; i < listeners.length; i++) {
 			listener = listeners[i];
-			listener.callback.apply( null, args );
+
+			if( listener.callback )
+				listener.callback.apply( null, args );
+			else {
+				// If there is not a callback, remove!
+				listener.once = true;
+			}
+
 			if( listener.once )
 				onceListeners.push( i );
 		}
@@ -456,11 +463,16 @@ XDispatcher.prototype = {
 		// A closure is needed for the callback id
 		Object.keys( this._callbacks ).forEach( function( id ){
 
-			// All the promises must be set in me._promises before trying to resolved
+			// All the promises must be set in me._promises before trying to resolve
 			// in order to make waitFor work ok
-			me._promises[ id ] = me._Promise.resolve().then( function(){
-				return me._callbacks[ id ].apply( me, dispatchArguments );
-			});
+			me._promises[ id ] = me._Promise.resolve()
+				.then( function(){
+					return me._callbacks[ id ].apply( me, dispatchArguments );
+				})
+				.catch( function( err ){
+					console.error( err.stack || err );
+				})
+			;
 
 			promises.push( me._promises[ id ] );
 		});
@@ -475,23 +487,6 @@ XDispatcher.prototype = {
 		return this._Promise.all( promises )
 			.then( dequeue, dequeue )
 		;
-
-
-		/* // Chain dispatch calls, not ready
-		promise.dispatch = promise.doAction = (function( p ) {
-
-			console.log( p );
-
-			var dispatchArgs = [].slice.call( arguments, 1 ),
-				dPromise = p.then(function(){
-					return me.dispatch.apply( me, dispatchArgs );
-				})
-			;
-
-			dPromise.dispatch = dPromise.doAction = p.dispatch;
-			return dPromise;
-		}).bind( promise );
-		*/
 	},
 
 	/**

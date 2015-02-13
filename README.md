@@ -63,6 +63,11 @@ Fluxify is available as a npm package.
 npm install fluxify
 ```
 
+Also as a bower package
+```
+bower install fluxify
+```
+
 It is possible to download the [full version](https://raw.githubusercontent.com/arqex/fluxify/master/build/fluxify.js) (~13KB) or [minified](https://raw.githubusercontent.com/arqex/fluxify/master/build/fluxify.min.js) (~5KB)
 
 ## Use
@@ -88,6 +93,8 @@ In this last case fluxify will be globally available.
 
 ## Docs
 Fluxify brings all the necessary to start with [flux architecture](https://facebook.github.io/flux/docs/overview.html) immediately: **dispatcher, stores** and **actions**.
+
+Below it is all the info needed to know how *Fluxify* works.
 
 ## Dispatcher
 Using Flux architecture your application has a main state and the UI reflects that state. When the user interact with the app ( or there are updates from the server ) an action is launched. The dispacher broadcasts the action data to the all registered callbacks and they update the application state depending on that data.
