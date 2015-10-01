@@ -16,7 +16,7 @@ It is simple because:
 Here it an example:
 
 ```js
-//Let's suposse browserify
+//Let's suppose browserify
 var flux = require('fluxify');
 
 // Create a store
@@ -97,7 +97,7 @@ Fluxify brings all the necessary to start with [flux architecture](https://faceb
 Below it is all the info needed to know how *Fluxify* works.
 
 ## Dispatcher
-Using Flux architecture your application has a main state and the UI reflects that state. When the user interact with the app ( or there are updates from the server ) an action is launched. The dispacher broadcasts the action data to the all registered callbacks and they update the application state depending on that data.
+Using Flux architecture your application has a main state and the UI reflects that state. When the user interact with the app ( or there are updates from the server ) an action is launched. The disptacher broadcasts the action data to the all registered callbacks and they update the application state depending on that data.
 
 In Fluxify the dispatcher is a singleton, as recommended by Facebook, and you can access to it through the fluxify object.
 
