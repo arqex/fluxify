@@ -1,6 +1,6 @@
 {
   "name": "fluxify",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "The simplest flux implementation",
   "homepage": "https://github.com/arqex/fluxify",
   "main": "fluxify.js",

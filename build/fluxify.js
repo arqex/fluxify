@@ -1,4 +1,4 @@
-/* fluxify v0.2.2 (13-2-2015)
+/* fluxify v0.2.3 (20-1-2016)
  * https://github.com/arqex/fluxify
  * By Javi Marquez (http://arqex.com)
  * License: GNU-2
@@ -70,7 +70,7 @@ var emitterPrototype = {
 			;
 
 			for (i = listeners.length - 1; i >= 0; i--) {
-				if( listeners[i] === listener )
+				if( listeners[i].callback === listener )
 					listeners.splice( i, 1 );
 			}
 		}

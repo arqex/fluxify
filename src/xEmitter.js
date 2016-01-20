@@ -42,7 +42,7 @@ var emitterPrototype = {
 			;
 
 			for (i = listeners.length - 1; i >= 0; i--) {
-				if( listeners[i] === listener )
+				if( listeners[i].callback === listener )
 					listeners.splice( i, 1 );
 			}
 		}
